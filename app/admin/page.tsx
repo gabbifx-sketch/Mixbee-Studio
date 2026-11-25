@@ -59,7 +59,7 @@ export default function AdminDashboard() {
   return <main className="admin-dashboard">
     <header className="admin-topbar">
       <a className="admin-brand" href="/">MIXBEE<span>.</span></a>
-      <div className="admin-top-actions"><span>STUDIO ADMIN</span><button className="admin-quiet-button" onClick={signOut}><LogOut size={16}/> Sign out</button></div>
+      <div className="admin-top-actions"><span>STUDIO ADMIN</span><a className="admin-quiet-button" href="/admin/chat">Live chat</a><button className="admin-quiet-button" onClick={signOut}><LogOut size={16}/> Sign out</button></div>
     </header>
     <section className="admin-content">
       <div className="admin-heading-row"><div><div className="admin-kicker">YOUR STUDIO, AT A GLANCE</div><h1>Good to have<br/><span>you back.</span></h1></div><button className="admin-refresh" onClick={() => void loadData()}><RefreshCw size={16}/> Refresh</button></div>
