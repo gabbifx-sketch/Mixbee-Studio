@@ -8,7 +8,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowDownRight, ArrowUpRight, AudioLines, Menu } from "lucide-react";
 
-const MIC_MODEL = "https://cdn.3dassets.dev/assets/38856/v1/model.glb";
+const MIC_MODEL = "/microphone.glb";
 
 function Microphone() {
   const rig = useRef<THREE.Group>(null);
