@@ -13,6 +13,7 @@ export default function AdminLoginPage() {
   const params = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
   const setupMissing = params?.get("setup") === "1";
   const denied = params?.get("denied") === "1";
+  const authError = params?.get("auth_error") === "1";
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -22,7 +23,7 @@ export default function AdminLoginPage() {
       const supabase = getSupabaseBrowserClient();
       const { error: authError } = await supabase.auth.signInWithOtp({
         email: email.trim().toLowerCase(),
-        options: { emailRedirectTo: `${window.location.origin}/admin`, shouldCreateUser: false },
+        options: { emailRedirectTo: `${window.location.origin}/auth/callback?next=/admin`, shouldCreateUser: false },
       });
       if (authError) throw authError;
       setSent(true);
@@ -41,6 +42,7 @@ export default function AdminLoginPage() {
       <p className="admin-muted">A secure sign-in link will be sent to your studio admin email.</p>
       {setupMissing && <div className="admin-alert">Supabase environment variables still need to be added in Vercel.</div>}
       {denied && <div className="admin-alert">This account does not have Mixbee admin access.</div>}
+      {authError && <div className="admin-alert">The sign-in link expired or could not be verified. Request a fresh one.</div>}
       {sent ? <div className="admin-success"><strong>Check your inbox.</strong><br />Your sign-in link is on its way to {email}. Open it on this device to enter the dashboard.</div> : <form onSubmit={handleSubmit} className="admin-form">
         <label htmlFor="admin-email">Admin email</label>
         <input id="admin-email" type="email" autoComplete="email" required value={email} onChange={e => setEmail(e.target.value)} />
