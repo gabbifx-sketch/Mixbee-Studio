@@ -10,7 +10,8 @@ export default function ContactForm() {
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setError(""); setLoading(true);
-    const form = new FormData(event.currentTarget);
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
     try {
       const { error: insertError } = await getSupabaseBrowserClient().from("contact_messages").insert({
         name: String(form.get("name") ?? "").trim(),
@@ -20,7 +21,7 @@ export default function ContactForm() {
         message: String(form.get("message") ?? "").trim(),
       });
       if (insertError) throw insertError;
-      setDone(true); event.currentTarget.reset();
+      setDone(true); formElement.reset();
     } catch (err) { setError(err instanceof Error ? err.message : "Message could not be sent."); }
     finally { setLoading(false); }
   }
