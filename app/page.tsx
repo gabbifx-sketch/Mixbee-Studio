@@ -1,9 +1,11 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment, Float, ContactShadows } from "@react-three/drei";
 import * as THREE from "three";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowDown, ArrowUpRight, AudioLines, Headphones, Menu, Mic2, Play, Radio, Sparkles, Waves, X } from "lucide-react";
 import { useState } from "react";
 
@@ -20,29 +22,29 @@ function StudioMic() {
       <group ref={group} position={[0, -0.12, 0]} scale={1.12}>
         <mesh position={[0, 0.68, 0]} castShadow>
           <cylinderGeometry args={[0.38, 0.38, 0.9, 48, 1, true]} />
-          <meshStandardMaterial color="#252b35" metalness={0.88} roughness={0.25} side={THREE.DoubleSide} />
+          <meshStandardMaterial color="#261638" metalness={0.9} roughness={0.2} side={THREE.DoubleSide} />
         </mesh>
         <mesh position={[0, 1.13, 0]} castShadow>
           <sphereGeometry args={[0.385, 48, 32, 0, Math.PI * 2, 0, Math.PI * 0.55]} />
-          <meshStandardMaterial color="#aeb7c3" metalness={0.82} roughness={0.22} />
+          <meshStandardMaterial color="#d9b9ef" metalness={0.88} roughness={0.18} />
         </mesh>
         {Array.from({length: 9}).map((_, i) => (
           <mesh key={i} position={[0, 0.72, 0]} rotation={[0, 0, (i - 4) * 0.13]}>
             <torusGeometry args={[0.397, 0.009, 8, 48]} />
-            <meshStandardMaterial color="#d5a66b" metalness={0.75} roughness={0.28} />
+            <meshStandardMaterial color="#d946ef" metalness={0.82} roughness={0.2} />
           </mesh>
         ))}
         <mesh position={[0, -0.02, 0]} castShadow>
           <cylinderGeometry args={[0.19, 0.25, 0.34, 32]} />
-          <meshStandardMaterial color="#111820" metalness={0.8} roughness={0.3} />
+          <meshStandardMaterial color="#160d22" metalness={0.86} roughness={0.24} />
         </mesh>
         <mesh position={[0, -0.42, 0]}>
           <cylinderGeometry args={[0.07, 0.07, 0.52, 20]} />
-          <meshStandardMaterial color="#b98950" metalness={0.85} roughness={0.22} />
+          <meshStandardMaterial color="#a855f7" metalness={0.9} roughness={0.18} />
         </mesh>
         <mesh position={[0, -0.72, 0]}>
           <torusGeometry args={[0.28, 0.035, 12, 48]} />
-          <meshStandardMaterial color="#b98950" metalness={0.85} roughness={0.22} />
+          <meshStandardMaterial color="#ec4899" metalness={0.9} roughness={0.18} />
         </mesh>
       </group>
     </Float>
@@ -52,8 +54,8 @@ function StudioMic() {
 function HeroScene() {
   return <Canvas camera={{position:[0,0,5.4], fov:36}} dpr={[1,1.7]} gl={{alpha:true, antialias:true}}>
     <ambientLight intensity={1.15}/>
-    <spotLight position={[4,5,5]} intensity={75} angle={0.42} penumbra={1} color="#f4c58e"/>
-    <pointLight position={[-4,1,2]} intensity={22} color="#6a9ab0"/>
+    <spotLight position={[4,5,5]} intensity={75} angle={0.42} penumbra={1} color="#e879f9"/>
+    <pointLight position={[-4,1,2]} intensity={22} color="#9333ea"/>
     <StudioMic/>
     <ContactShadows position={[0,-1.45,0]} opacity={0.42} scale={5} blur={2.8} far={3}/>
     <Environment preset="studio"/>
@@ -69,6 +71,30 @@ const services = [
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    const ctx = gsap.context(() => {
+      gsap.fromTo(".hero-copy > *", { y: 28, opacity: 0 }, {
+        y: 0, opacity: 1, duration: 0.85, stagger: 0.11, ease: "power3.out"
+      });
+      gsap.to(".mic-stage", {
+        y: 145, rotate: 9, scale: 0.82, ease: "none",
+        scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 1 }
+      });
+      gsap.to(".visual-orbit", {
+        rotate: 28, scale: 1.12, ease: "none",
+        scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 1.4 }
+      });
+      gsap.utils.toArray<HTMLElement>(".intro-content, .section-heading, .service-card, .gallery-card, .gallery-note, .contact-section > *").forEach((item) => {
+        gsap.fromTo(item, { y: 38, opacity: 0 }, {
+          y: 0, opacity: 1, duration: 0.8, ease: "power3.out",
+          scrollTrigger: { trigger: item, start: "top 88%", once: true }
+        });
+      });
+    });
+    return () => ctx.revert();
+  }, []);
   return (
     <main>
       <div className="grain"/>
