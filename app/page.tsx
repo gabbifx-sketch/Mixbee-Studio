@@ -77,7 +77,7 @@ export default function Home() {
     <header className="header">
       <a className="wordmark" href="#home"><AudioLines size={21} /> MIXBEE<span>.</span></a>
       <nav><a href="#studio">Studio</a><a href="#sound">What we do</a><a href="#contact">Contact</a></nav>
-      <a className="header-book" href="#contact">Book a session <ArrowUpRight size={16} /></a>
+      <a className="header-book" href="/booking">Book a session <ArrowUpRight size={16} /></a>
       <button className="mobile-menu" aria-label="Open menu"><Menu /></button>
     </header>
 
@@ -87,7 +87,7 @@ export default function Home() {
           <span className="eyebrow">MIXBEE RECORDING STUDIO</span>
           <h1>MAKE<br />SOUND<br /><span>MATTER.</span></h1>
           <p>Bring your ideas to life. Find your sound. Make something that stays with people.</p>
-          <a className="pill-button" href="#contact">Step into the studio <ArrowUpRight size={17} /></a>
+          <a className="pill-button" href="/booking">Step into the studio <ArrowUpRight size={17} /></a>
         </div>
         <a className="scroll-hint" href="#studio">SCROLL TO EXPLORE <ArrowDownRight size={17} /></a>
         <span className="hero-location">GHANA · RECORDING / MIXING / MASTERING</span>
@@ -123,8 +123,8 @@ export default function Home() {
         <span className="eyebrow reveal">YOUR NEXT TRACK STARTS HERE</span>
         <h2 className="reveal">LET'S MAKE<br /><span>IT REAL.</span></h2>
         <p className="reveal">Have a sound in mind? Let's talk about bringing it to life.</p>
-        <a className="pill-button reveal" href="mailto:hello@mixbee.studio">Get in touch <ArrowUpRight size={17} /></a>
-        <span className="contact-note">CONTACT DETAILS TO BE CONFIRMED</span>
+        <a className="pill-button reveal" href="/contact">Get in touch <ArrowUpRight size={17} /></a>
+        <a className="contact-note" href="/booking">BOOK A STUDIO SESSION ↗</a>
       </section>
       <footer className="footer"><a className="wordmark" href="#home"><AudioLines size={20} /> MIXBEE<span>.</span></a><span>MAKE SOUND MATTER.</span><span>© 2026 MIXBEE STUDIO</span></footer>
     </div>
