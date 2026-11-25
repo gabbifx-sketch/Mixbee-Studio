@@ -13,18 +13,35 @@ const MIC_MODEL = "/microphone.glb";
 function Microphone() {
   const rig = useRef<THREE.Group>(null);
   const { scene } = useGLTF(MIC_MODEL);
+  const fitted = useRef<{ scale: number; center: THREE.Vector3 } | null>(null);
+
+  useEffect(() => {
+    const bounds = new THREE.Box3().setFromObject(scene);
+    const size = bounds.getSize(new THREE.Vector3());
+    const center = bounds.getCenter(new THREE.Vector3());
+    const largestDimension = Math.max(size.x, size.y, size.z) || 1;
+    fitted.current = { scale: 2.45 / largestDimension, center };
+  }, [scene]);
+
   useFrame((state) => {
     if (!rig.current) return;
     rig.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.22) * 0.24;
     rig.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.32) * 0.035;
   });
-  return <group ref={rig} scale={8.8} position={[0, -0.55, 0]}>
-    <primitive object={scene} />
+
+  const fit = fitted.current;
+  return <group ref={rig}>
+    <group
+      scale={fit?.scale ?? 1}
+      position={fit ? [-fit.center.x * fit.scale, -fit.center.y * fit.scale, -fit.center.z * fit.scale] : [0, 0, 0]}
+    >
+      <primitive object={scene} />
+    </group>
   </group>;
 }
 
 function MicScene() {
-  return <Canvas camera={{ position: [0, 0, 4.5], fov: 34 }} dpr={[1, 1.5]} gl={{ alpha: true, antialias: true }}>
+  return <Canvas camera={{ position: [0, 0, 5.2], fov: 38 }} dpr={[1, 1.5]} gl={{ alpha: true, antialias: true }}>
     <ambientLight intensity={1.35} />
     <directionalLight position={[3, 5, 4]} intensity={3.5} color="#fff0ff" />
     <pointLight position={[-3, 1, 2]} intensity={18} color="#a855f7" />
