@@ -1,119 +1,118 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Environment, ContactShadows, useGLTF } from "@react-three/drei";
+import { Environment, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ArrowDown, ArrowUpRight, AudioLines, Headphones, Menu, Mic2, Play, Radio, Sparkles, Waves, X } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, AudioLines, Menu } from "lucide-react";
 
 const MIC_MODEL = "https://cdn.3dassets.dev/assets/38856/v1/model.glb";
 
-function RealMicrophone() {
+function Microphone() {
   const rig = useRef<THREE.Group>(null);
   const { scene } = useGLTF(MIC_MODEL);
-  useFrame((state, delta) => {
+  useFrame((state) => {
     if (!rig.current) return;
-    rig.current.rotation.y += delta * 0.24;
-    rig.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.7) * 0.035;
+    rig.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.22) * 0.24;
+    rig.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.32) * 0.035;
   });
-  return <group ref={rig} scale={7.8} position={[0, -0.52, 0]}>
+  return <group ref={rig} scale={8.8} position={[0, -0.55, 0]}>
     <primitive object={scene} />
   </group>;
 }
 
-function MicCanvas() {
-  return <Canvas camera={{ position: [0, 0, 4.6], fov: 34 }} dpr={[1,1.5]} gl={{ alpha:true, antialias:true }}>
-    <ambientLight intensity={1.25}/>
-    <directionalLight position={[3,5,4]} intensity={3.2} color="#fff0ff"/>
-    <pointLight position={[-3,1,2]} intensity={18} color="#bd65ff"/>
-    <pointLight position={[2,-2,2]} intensity={13} color="#ff65ba"/>
-    <RealMicrophone/>
-    <ContactShadows position={[0,-1.1,0]} opacity={0.32} scale={4} blur={2.6} far={3}/>
-    <Environment preset="studio"/>
+function MicScene() {
+  return <Canvas camera={{ position: [0, 0, 4.5], fov: 34 }} dpr={[1, 1.5]} gl={{ alpha: true, antialias: true }}>
+    <ambientLight intensity={1.35} />
+    <directionalLight position={[3, 5, 4]} intensity={3.5} color="#fff0ff" />
+    <pointLight position={[-3, 1, 2]} intensity={18} color="#a855f7" />
+    <pointLight position={[2, -2, 2]} intensity={14} color="#ec4899" />
+    <Microphone />
+    <Environment preset="studio" />
   </Canvas>;
 }
 useGLTF.preload(MIC_MODEL);
 
-const services = [
-  {number:"01", icon:Mic2, title:"Recording", copy:"Capture the voice, performance and feeling behind every idea."},
-  {number:"02", icon:Waves, title:"Mixing", copy:"Bring every element together with clarity, space and impact."},
-  {number:"03", icon:Headphones, title:"Mastering", copy:"The final polish that helps your sound translate everywhere."},
-  {number:"04", icon:Radio, title:"Production", copy:"Shape raw ideas into a sound with its own identity."},
-];
+const studioImage = "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=2200&q=90";
+const performanceImage = "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=1800&q=90";
+const consoleImage = "https://images.unsplash.com/photo-1598653222000-6b7b7a552625?auto=format&fit=crop&w=1800&q=90";
 
 export default function Home() {
-  const [menuOpen,setMenuOpen]=useState(false);
-  useEffect(()=>{
+  useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
-    const ctx=gsap.context(()=>{
-      gsap.fromTo(".hero-copy .reveal",{y:36,opacity:0},{y:0,opacity:1,duration:1,stagger:.13,ease:"power4.out",delay:.15});
-      const micPath=gsap.timeline({scrollTrigger:{trigger:".site-content",start:"top top",end:"bottom bottom",scrub:1.15}});
-      micPath.to(".scroll-mic",{x:"-5vw",y:"8vh",rotation:115,scale:.9,ease:"none",duration:1})
-        .to(".scroll-mic",{x:"-29vw",y:"-9vh",rotation:330,scale:.76,ease:"none",duration:1})
-        .to(".scroll-mic",{x:"-3vw",y:"18vh",rotation:590,scale:1.02,ease:"none",duration:1})
-        .to(".scroll-mic",{x:"-31vw",y:"-12vh",rotation:820,scale:.82,ease:"none",duration:1})
-        .to(".scroll-mic",{x:"-7vw",y:"4vh",rotation:1080,scale:.9,ease:"none",duration:1});
-      gsap.utils.toArray<HTMLElement>(".reveal-up").forEach((el)=>{
-        gsap.fromTo(el,{y:54,opacity:0},{y:0,opacity:1,duration:.95,ease:"power3.out",scrollTrigger:{trigger:el,start:"top 86%",once:true}});
+    const ctx = gsap.context(() => {
+      gsap.from(".hero-copy > *", { y: 34, opacity: 0, duration: 1, stagger: 0.13, ease: "power4.out" });
+      gsap.to(".scroll-mic", {
+        x: "-38vw", y: "46vh", rotation: 560, scale: 0.68, ease: "none",
+        scrollTrigger: { trigger: ".page-flow", start: "top top", end: "bottom bottom", scrub: 1.1 }
       });
-      gsap.utils.toArray<HTMLElement>(".service-card").forEach((el,i)=>{
-        gsap.fromTo(el,{y:55,opacity:0,scale:.97},{y:0,opacity:1,scale:1,duration:.8,delay:i*.1,ease:"power3.out",scrollTrigger:{trigger:".service-grid",start:"top 82%",once:true}});
+      gsap.utils.toArray<HTMLElement>(".reveal").forEach((el) => {
+        gsap.from(el, { y: 48, opacity: 0, duration: 0.9, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 84%", once: true } });
       });
-      gsap.utils.toArray<HTMLElement>(".photo-card").forEach((el,i)=>{
-        gsap.fromTo(el,{y:60,opacity:0,scale:.96},{y:0,opacity:1,scale:1,duration:.9,delay:i*.12,ease:"power3.out",scrollTrigger:{trigger:".photo-grid",start:"top 82%",once:true}});
+      gsap.utils.toArray<HTMLElement>(".scene-image").forEach((el) => {
+        gsap.fromTo(el, { scale: 1.12 }, { scale: 1, ease: "none", scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: 1 } });
       });
     });
-    return ()=>ctx.revert();
-  },[]);
+    return () => ctx.revert();
+  }, []);
+
   return <main>
-    <div className="grain"/>
-    <div className="scroll-mic" aria-hidden="true"><div className="mic-halo"/><MicCanvas/><span className="mic-caption">MIXBEE · SOUND IN MOTION</span></div>
-    <header className="site-header">
-      <a className="brand" href="#home"><span className="brand-mark"><AudioLines size={21}/></span><span>MIXBEE<span className="brand-dot">.</span></span></a>
-      <nav className={menuOpen?"nav-links open":"nav-links"}>
-        <a href="#studio" onClick={()=>setMenuOpen(false)}>Studio</a><a href="#services" onClick={()=>setMenuOpen(false)}>Services</a><a href="#gallery" onClick={()=>setMenuOpen(false)}>Gallery</a><a href="#contact" onClick={()=>setMenuOpen(false)}>Contact</a>
-      </nav>
-      <a className="header-cta" href="#contact">Book a session <ArrowUpRight size={16}/></a>
-      <button className="menu-toggle" onClick={()=>setMenuOpen(!menuOpen)} aria-label="Toggle menu">{menuOpen?<X/>:<Menu/>}</button>
+    <div className="scroll-mic" aria-hidden="true"><MicScene /></div>
+    <header className="header">
+      <a className="wordmark" href="#home"><AudioLines size={21} /> MIXBEE<span>.</span></a>
+      <nav><a href="#studio">Studio</a><a href="#sound">What we do</a><a href="#contact">Contact</a></nav>
+      <a className="header-book" href="#contact">Book a session <ArrowUpRight size={16} /></a>
+      <button className="mobile-menu" aria-label="Open menu"><Menu /></button>
     </header>
-    <div className="site-content">
-      <section className="hero" id="home">
+
+    <div className="page-flow">
+      <section className="hero" id="home" style={{ backgroundImage: `linear-gradient(90deg,rgba(8,5,15,.94) 0%,rgba(8,5,15,.72) 43%,rgba(8,5,15,.2) 100%),linear-gradient(0deg,rgba(8,5,15,.35),transparent 55%),url(${studioImage})` }}>
         <div className="hero-copy">
-          <div className="eyebrow reveal"><span className="eyebrow-line"/> RECORDING · MIXING · MASTERING</div>
-          <h1 className="reveal">YOUR SOUND.<br/><span>YOUR</span> MOMENT.</h1>
-          <p className="hero-description reveal">A space to turn raw ideas into something people can feel. Step in, find your sound, and make it count.</p>
-          <div className="hero-actions reveal"><a className="button-primary" href="#contact">Book a session <ArrowUpRight size={17}/></a><a className="button-secondary" href="#studio"><span className="play-icon"><Play size={11} fill="currentColor"/></span> Explore the studio</a></div>
-          <div className="hero-foot reveal"><span><i/> SOUND STARTS HERE</span><span>GHANA · MIXBEE STUDIO</span></div>
+          <span className="eyebrow">MIXBEE RECORDING STUDIO</span>
+          <h1>MAKE<br />SOUND<br /><span>MATTER.</span></h1>
+          <p>Bring your ideas to life. Find your sound. Make something that stays with people.</p>
+          <a className="pill-button" href="#contact">Step into the studio <ArrowUpRight size={17} /></a>
         </div>
-        <div className="hero-side"><div className="hero-ring ring-a"/><div className="hero-ring ring-b"/><span className="hero-index">01 — THE EXPERIENCE</span><span className="hero-side-note">SCROLL. WATCH IT MOVE.</span></div>
-        <a className="scroll-cue" href="#studio"><span>SCROLL TO EXPLORE</span><ArrowDown size={15}/></a>
+        <a className="scroll-hint" href="#studio">SCROLL TO EXPLORE <ArrowDownRight size={17} /></a>
+        <span className="hero-location">GHANA · RECORDING / MIXING / MASTERING</span>
       </section>
-      <section className="intro-section" id="studio">
-        <div className="section-kicker reveal-up"><span>01</span> / THE SPACE</div>
-        <div className="intro-content reveal-up"><p className="overline">WHERE IDEAS FIND THEIR SOUND</p><h2>Make room<br/>for <span>something real.</span></h2><div className="intro-bottom"><p>Every great track starts with an idea. This is where the details come together — the takes, the layers, the moments that make a sound yours.</p><a className="round-link" href="#gallery" aria-label="Explore gallery"><ArrowUpRight/></a></div></div>
-        <div className="intro-stamp"><AudioLines/><span>CREATE WITHOUT LIMITS</span></div>
-      </section>
-      <section className="services-section" id="services">
-        <div className="section-heading"><div className="reveal-up"><div className="section-kicker"><span>02</span> / WHAT WE DO</div><h2>Every layer<br/>has a <span>purpose.</span></h2></div><p className="reveal-up">From the first take to the final polish, bring every part of your sound into focus.</p></div>
-        <div className="service-grid">{services.map(({number,icon:Icon,title,copy})=><article className="service-card" key={number}><div className="service-top"><span>{number}</span><Icon size={23} strokeWidth={1.5}/></div><h3>{title}</h3><p>{copy}</p><a className="service-arrow" href="#contact" aria-label={`Ask about ${title}`}><ArrowUpRight size={18}/></a></article>)}</div>
-      </section>
-      <section className="gallery-section" id="gallery">
-        <div className="gallery-top"><div className="reveal-up"><div className="section-kicker"><span>03</span> / INSIDE MIXBEE</div><h2>Feel the<br/><span>frequency.</span></h2></div><p className="reveal-up">The atmosphere, the equipment and the creative process — all part of the sound.</p></div>
-        <div className="photo-grid">
-          <figure className="photo-card photo-wide"><img src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1500&q=85" alt="Professional recording studio with mixing desk and acoustic treatment"/><figcaption><span>01 / THE CONTROL ROOM</span><span>LISTEN CLOSE</span></figcaption></figure>
-          <figure className="photo-card photo-tall"><img src="https://images.unsplash.com/photo-1598653222000-6b7b7a552625?auto=format&fit=crop&w=1100&q=85" alt="Audio mixing console in a music production studio"/><figcaption><span>02 / THE DETAILS</span><span>IN EVERY LAYER</span></figcaption></figure>
-          <figure className="photo-card photo-bottom"><img src="https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=1200&q=85" alt="Singer performing into a microphone in a recording session"/><figcaption><span>03 / THE PERFORMANCE</span><span>MAKE IT YOURS</span></figcaption></figure>
+
+      <section className="statement" id="studio">
+        <div className="statement-copy reveal">
+          <span className="eyebrow">THE MIXBEE EXPERIENCE</span>
+          <h2>Every sound<br />starts <span>somewhere.</span></h2>
+          <p>A space to create, experiment and bring the sound in your head into the real world.</p>
         </div>
-        <div className="gallery-note reveal-up"><Sparkles size={18}/><p>GOOD SOUND. GOOD ENERGY. GREAT WORK.</p><span>THE MIXBEE EXPERIENCE</span></div>
+        <div className="statement-image scene-image" style={{ backgroundImage: `url(${performanceImage})` }} aria-label="Artist performing in a recording studio" />
       </section>
-      <section className="contact-section" id="contact">
-        <div className="contact-orb reveal-up"><AudioLines size={36}/></div><div className="section-kicker reveal-up"><span>04</span> / YOUR NEXT MOVE</div>
-        <h2 className="reveal-up">LET'S MAKE<br/><span>IT MATTER.</span></h2><p className="reveal-up">Got a project, a voice or an idea ready to take shape? Let's start with a conversation.</p>
-        <a className="button-primary reveal-up" href="mailto:hello@mixbee.studio">Start a conversation <ArrowUpRight size={17}/></a><span className="contact-footnote">CONTACT DETAILS TO BE CONFIRMED</span>
+
+      <section className="sound-section" id="sound">
+        <div className="sound-heading reveal">
+          <span className="eyebrow">FROM FIRST TAKE TO FINAL PLAY</span>
+          <h2>THE SOUND<br /><span>IS YOURS.</span></h2>
+        </div>
+        <div className="sound-list">
+          <div className="sound-item reveal"><span>01</span><h3>Recording</h3><p>Capture the moment.</p><ArrowUpRight /></div>
+          <div className="sound-item reveal"><span>02</span><h3>Mixing</h3><p>Bring every layer together.</p><ArrowUpRight /></div>
+          <div className="sound-item reveal"><span>03</span><h3>Mastering</h3><p>Give your sound its final polish.</p><ArrowUpRight /></div>
+          <div className="sound-item reveal"><span>04</span><h3>Production</h3><p>Build an idea into a record.</p><ArrowUpRight /></div>
+        </div>
       </section>
-      <footer className="footer"><a className="brand" href="#home"><span className="brand-mark"><AudioLines size={20}/></span><span>MIXBEE<span className="brand-dot">.</span></span></a><span>MAKE SOUND MATTER.</span><span>© 2026 MIXBEE STUDIO</span></footer>
+
+      <section className="full-image scene-image" style={{ backgroundImage: `linear-gradient(90deg,rgba(8,5,15,.62),rgba(8,5,15,.05)),url(${consoleImage})` }}>
+        <div className="image-caption reveal"><span className="eyebrow">DETAIL MAKES THE DIFFERENCE</span><h2>HEAR<br />EVERYTHING.</h2></div>
+      </section>
+
+      <section className="contact" id="contact">
+        <span className="eyebrow reveal">YOUR NEXT TRACK STARTS HERE</span>
+        <h2 className="reveal">LET'S MAKE<br /><span>IT REAL.</span></h2>
+        <p className="reveal">Have a sound in mind? Let's talk about bringing it to life.</p>
+        <a className="pill-button reveal" href="mailto:hello@mixbee.studio">Get in touch <ArrowUpRight size={17} /></a>
+        <span className="contact-note">CONTACT DETAILS TO BE CONFIRMED</span>
+      </section>
+      <footer className="footer"><a className="wordmark" href="#home"><AudioLines size={20} /> MIXBEE<span>.</span></a><span>MAKE SOUND MATTER.</span><span>© 2026 MIXBEE STUDIO</span></footer>
     </div>
   </main>;
 }
