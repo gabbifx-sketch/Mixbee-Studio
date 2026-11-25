@@ -12,8 +12,11 @@ export default function BookingForm() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    getSupabaseBrowserClient().from("services").select("id,name").eq("active", true).order("sort_order")
-      .then(({ data }) => setServices((data ?? []) as Service[]));
+    async function loadServices() {
+      const result: any = await getSupabaseBrowserClient().from("services").select("id,name").eq("active", true).order("sort_order");
+      setServices((result.data ?? []) as Service[]);
+    }
+    void loadServices();
   }, []);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
