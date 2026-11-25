@@ -11,5 +11,5 @@ export function getSupabaseBrowserClient() {
   }
 
   if (!client) client = createClient(url, key);
-  return client;
+  return client as any;
 }
