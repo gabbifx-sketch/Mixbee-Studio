@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
@@ -13,14 +13,12 @@ const MIC_MODEL = "/microphone.glb";
 function Microphone() {
   const rig = useRef<THREE.Group>(null);
   const { scene } = useGLTF(MIC_MODEL);
-  const fitted = useRef<{ scale: number; center: THREE.Vector3 } | null>(null);
-
-  useEffect(() => {
+  const fit = useMemo(() => {
     const bounds = new THREE.Box3().setFromObject(scene);
     const size = bounds.getSize(new THREE.Vector3());
     const center = bounds.getCenter(new THREE.Vector3());
     const largestDimension = Math.max(size.x, size.y, size.z) || 1;
-    fitted.current = { scale: 2.45 / largestDimension, center };
+    return { scale: 2.45 / largestDimension, center };
   }, [scene]);
 
   useFrame((state) => {
@@ -29,7 +27,6 @@ function Microphone() {
     rig.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.32) * 0.035;
   });
 
-  const fit = fitted.current;
   return <group ref={rig}>
     <group
       scale={fit?.scale ?? 1}
