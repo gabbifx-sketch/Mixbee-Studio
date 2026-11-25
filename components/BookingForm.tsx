@@ -18,7 +18,8 @@ export default function BookingForm() {
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setError(""); setLoading(true);
-    const form = new FormData(event.currentTarget);
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
     try {
       const { error: insertError } = await getSupabaseBrowserClient().from("bookings").insert({
         customer_name: String(form.get("name") ?? "").trim(),
@@ -30,7 +31,7 @@ export default function BookingForm() {
         notes: String(form.get("notes") ?? "").trim(),
       });
       if (insertError) throw insertError;
-      setDone(true); event.currentTarget.reset();
+      setDone(true); formElement.reset();
     } catch (err) { setError(err instanceof Error ? err.message : "Your request could not be sent. Please try again."); }
     finally { setLoading(false); }
   }
