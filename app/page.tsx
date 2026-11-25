@@ -18,7 +18,7 @@ function RealMicrophone() {
     rig.current.rotation.y += delta * 0.24;
     rig.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.7) * 0.035;
   });
-  return <group ref={rig} scale={2.55} position={[0, -0.52, 0]}>
+  return <group ref={rig} scale={7.8} position={[0, -0.52, 0]}>
     <primitive object={scene} />
   </group>;
 }
