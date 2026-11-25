@@ -5,6 +5,7 @@ import Link from "next/link";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { ArrowLeft, Send, RefreshCw } from "lucide-react";
 import "../admin.css";
+import "./chat.css";
 
 type Conversation = { id: string; visitor_name: string; status: string; created_at: string };
 type ChatMessage = { id: string; sender_type: string; message: string; created_at: string };
