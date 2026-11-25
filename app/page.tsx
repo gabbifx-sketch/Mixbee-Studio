@@ -5,6 +5,8 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import gsap from "gsap";
+import ChatWidget from "@/components/ChatWidget";
+import "./chat-widget.css";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowDownRight, ArrowUpRight, AudioLines, Menu } from "lucide-react";
 
@@ -128,5 +130,6 @@ export default function Home() {
       </section>
       <footer className="footer"><a className="wordmark" href="#home"><AudioLines size={20} /> MIXBEE<span>.</span></a><span>MAKE SOUND MATTER.</span><span>© 2026 MIXBEE STUDIO</span></footer>
     </div>
+    <ChatWidget />
   </main>;
 }
